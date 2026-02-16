@@ -1,0 +1,16 @@
+{
+	"folders": [
+		{
+			"path": "wifi/ander board esp32 wifi"
+		},
+		{
+			"name": "esp-32 SPI Master",
+			"path": "SPI/esp-32 SPI Master"
+		},
+		{
+			"name": "esp-32 main code",
+			"path": "esp-32 main code"
+		}
+	],
+	"settings": {}
+}
