@@ -1,8 +1,12 @@
 #include <Arduino.h>
+
 #include <WiFi.h>
-#include <esp_wifi.h>
+#include <HTTPClient.h>
+
 #include <time.h>
+
 #include <stdint.h>
+
 #include <SPI.h>
 
 // SPI GPIO pins
@@ -11,9 +15,19 @@
 #define SPI_SCK  18
 #define SPI_CS   5
 
+// other GPIO pins
+#define potentiometer 4
+
 // WIFI credentials
 const char* ssid = "H369A33B136";
 const char* password = "22A5E7EA2E2D";
+
+// time variables
+unsigned long last_read = 0;
+unsigned long current_time;
+
+// potentiometer variables
+int pot_value;
 
 // WIFI functions
 
@@ -72,16 +86,11 @@ float spi_receive_float() {
     delayMicroseconds(100); // Give ATtiny time to detect SS low and prepare data
     
     // Receive 4 bytes and print them as they arrive
-    Serial.print("Raw bytes received: ");
+    // Receive 4 bytes
     for (int i = 0; i < 4; i++) {
         bytes[i] = spi_transfer_byte(0x00);  // Send dummy byte
-        Serial.print("0x");
-        if(bytes[i] < 16) Serial.print("0");
-        Serial.print(bytes[i], HEX);
-        Serial.print(" ");
-        delayMicroseconds(20); // Delay between bytes for ATtiny to prepare next byte
+        delayMicroseconds(500); // Delay for ATtiny to prepare next byte
     }
-    Serial.println();
     
     // Pull CS high to end transmission
     delayMicroseconds(20);
@@ -107,8 +116,40 @@ void print_float_bytes(float value) {
     Serial.println();
 }
 
+void getData() {
+       if (current_time - last_read >= 500) {
+        //Serial.print("Time: ");
+        //Serial.print(current_time / 1000);
+        //Serial.println("s");
+        
+        float received_value = spi_receive_float();
+        
+        //Serial.println("=================================");
+        Serial.print("Received float: ");
+        Serial.println(received_value, 6);
+        pot_value = analogRead(potentiometer);
+        Serial.print("Potentiometer value: ");
+        Serial.println(pot_value / 4095.0 * 3.3); 
+        
+        // Print the bytes as they were received
+        //print_float_bytes(received_value);
+        
+        //Serial.println("=================================");
+        //Serial.println();
+        
+        last_read = current_time;
+    }
+}
+// main code
+
 void setup() {
   Serial.begin(115200);
   delay(1000); // Wait for Serial to initialize
   spi_master_init();
+  pinMode(potentiometer, INPUT);
+}
+
+void loop() {
+    current_time = millis();
+    getData();
 }
