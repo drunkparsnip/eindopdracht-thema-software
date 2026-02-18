@@ -10,6 +10,9 @@
 		{
 			"name": "esp-32 main code",
 			"path": "esp-32 main code"
+		},
+		{
+			"path": "server"
 		}
 	],
 	"settings": {}
