@@ -17,11 +17,12 @@ void setup(){
 
     WiFi.mode(WIFI_STA);
     WiFi.begin(ssid, password);
-    Serial.println("\nConnecting");
+    Serial.print("\nConnecting to: ");
+    Serial.println(ssid);
 
     while(WiFi.status() != WL_CONNECTED){
         Serial.print(".");
-        delay(100);
+        delay(500);
     }
 
     Serial.println("\nConnected to the WiFi network");
