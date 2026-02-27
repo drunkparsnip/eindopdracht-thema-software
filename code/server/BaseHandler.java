@@ -6,18 +6,9 @@ import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
 import java.sql.Connection;
 
-/**
- * Abstracte basisklasse voor alle HTTP-handlers.
- *
- * Bevat gedeelde hulpmethoden (bijv. een HTTP-response versturen)
- * zodat subklasses (GETHandler, POSTHandler) deze niet hoeven te
- * herhalen. Elke subklasse implementeert de methode handle().
- *
- * @author A.P.A. Slaa
- */
 public abstract class BaseHandler implements HttpHandler {
 
-    /** Gedeelde databaseverbinding, doorgegeven vanuit App. */
+    
     protected final Connection connection;
 
     protected BaseHandler(Connection connection) {
